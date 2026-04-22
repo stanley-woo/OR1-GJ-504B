@@ -1,0 +1,16 @@
+{
+  "name": "gj-504b",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Starter workspace for a paper-trading application.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "@prisma/client": "^7.7.0"
+  },
+  "devDependencies": {
+    "prisma": "^7.7.0"
+  }
+}
