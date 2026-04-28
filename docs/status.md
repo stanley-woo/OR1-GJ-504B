@@ -35,6 +35,9 @@
 - Step 3 complete: Prisma is installed, `prisma/schema.prisma` exists, `prisma.config.ts` is in place, and Prisma connects to Supabase
 - Step 4 complete: `workers/snapshots/go.mod` exists and the Go worker is initialized as a module
 - Step 5 complete: Clerk, Supabase, and Twelve Data env vars are wired and each integration was sanity-checked independently
+- Step 6 complete: the first schema draft now defines `User`, `BrokerageAccount`, and `AccountStatus`
+- Step 7 complete: the protected `/app` onboarding gate now provisions `User` and `BrokerageAccount` from Clerk identity data before entering the product
+- Step 8 complete: a shared Prisma client module now exists for the Next.js app and the current onboarding page lint checks cleanly
 
 ## Current Files And Runtime Notes
 
@@ -42,11 +45,15 @@
 - Next.js runtime env vars live in `apps/web/.env.local`
 - Supabase uses the `session pooler` connection string because the direct connection path was not reachable from the current network
 - Prisma is using `prisma.config.ts`, which matches the installed `Prisma 7` setup
+- `prisma/schema.prisma` validates successfully with `npx prisma validate`
+- The onboarding gate lives at `apps/web/app/app/page.tsx`
+- The shared Prisma client now lives at `apps/web/lib/prisma.ts` and is imported as `@/lib/prisma`
+- The onboarding page and current Prisma schema both expect `User.email` to be present
+- `npx prisma generate`, `npx tsc -p apps/web/tsconfig.json --noEmit`, and `npm --workspace apps/web run lint` all pass against the current onboarding work
 
 ## Good Next Steps
 
-- Define the first Prisma models
-- Add the minimal Clerk integration to the Next.js app
+- Add the `/dashboard` page that assumes provisioning is complete and renders the seeded account state
+- Add auth-aware redirects for `/`, `/sign-in`, and `/sign-up`
 - Create a `MarketDataProvider` adapter in the web app
 - Start shaping the first product API routes
-

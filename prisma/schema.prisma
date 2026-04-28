@@ -5,3 +5,37 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// User maps the app identity
+model User {
+  id String @id @default(cuid()) // This is the primary key for this table
+  firstName  String?
+  lastName  String?
+  email String @unique
+  clerkId String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account BrokerageAccount?
+}
+
+// BrokerageAccount maps paper-trading state. It acts as the anchor of the paper-trading logic.
+model BrokerageAccount {
+  id String @id @default(cuid()) // This is the primary key for this table
+  status AccountStatus @default(ACTIVE)
+  baseCurrency String @default("USD")
+  buyingPower Decimal @default(10000.00) @db.Decimal(18,2)
+  cashBalance Decimal @default(10000.00) @db.Decimal(18,2)
+  openedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId String @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+}
+
+enum AccountStatus {
+ACTIVE
+SUSPENDED
+CLOSED
+}
