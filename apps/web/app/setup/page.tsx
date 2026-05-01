@@ -1,19 +1,19 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 
-import { redirect } from "next/navigation";
+import { redirect} from "next/navigation";
 
-export default async function AppGatePage() {
+export default async function SetupGatePage() {
   try {
-    const { userId } = await auth()
+    const { userId } = await auth();
 
-    if ( !userId) {
+    if (!userId) {
       redirect("/sign-in");
     }
 
     const clerkUser = await currentUser();
 
-    if ( !clerkUser) {
+    if (!clerkUser) {
       redirect("/sign-in");
     }
 
@@ -25,11 +25,11 @@ export default async function AppGatePage() {
 
     // 1.) Find User by clerkId
     let user = await prisma.user.findUnique({
-      where: {clerkId: userId},
+      where: { clerkId: userId },
     });
 
     // 2.) Create User if missing
-    if ( !user ) {
+    if (!user) {
       user = await prisma.user.create({
         data: {
           clerkId: userId,
@@ -42,11 +42,11 @@ export default async function AppGatePage() {
 
     // 3.) Find BrokerageAccount for that user
     let acc = await prisma.brokerageAccount.findUnique({
-      where: {userId: user.id},
+      where: { userId: user.id },
     });
 
     // 4.) Create if missing
-    if ( !acc) {
+    if (!acc) {
       acc = await prisma.brokerageAccount.create({
         data: {
           userId: user.id,
@@ -54,8 +54,7 @@ export default async function AppGatePage() {
       });
     }
     // 5.) Redirect to /dashboard once ready
-    redirect("/dashboard");
-  } catch {
+  } catch (e) {
     return (
       <main>
         <h1>We couldn&apos;t finish setting up your account.</h1>
@@ -63,4 +62,6 @@ export default async function AppGatePage() {
       </main>
     );
   }
+
+  redirect("/dashboard");
 }
