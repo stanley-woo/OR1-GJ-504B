@@ -9,10 +9,10 @@ datasource db {
 // User maps the app identity
 model User {
   id String @id @default(cuid()) // This is the primary key for this table
+  clerkId String @unique
+  email String @unique
   firstName  String?
   lastName  String?
-  email String @unique
-  clerkId String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
