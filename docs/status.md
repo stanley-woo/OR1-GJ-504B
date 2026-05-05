@@ -42,6 +42,8 @@
 - Step 10 complete: `/`, `/sign-in`, and `/sign-up` now redirect signed-in users into setup, and the shell includes a working sign-out control
 - Step 11 complete: Clerk auth buttons are now used in the supported form for the installed Clerk version: childless `<SignInButton />` and `<SignUpButton />` components, with custom button children avoided
 - Step 12 complete: the Day 1 auth route matrix was manually verified for signed-in and signed-out users across `/`, `/sign-in`, `/sign-up`, `/setup`, and `/dashboard`
+- Step 13 in progress: Day 2 market data provider boundary is scaffolded under `apps/web/lib/market-data`
+- Step 14 in progress: Twelve Data adapter types and low-level helpers are started, including raw response types, URL construction, JSON fetching, and number parsing
 
 ## Current Files And Runtime Notes
 
@@ -56,6 +58,11 @@
 - The signed-in dashboard lives at `apps/web/app/dashboard/page.tsx`
 - The installed Clerk button components should be used without children unless the app intentionally switches to fully custom auth controls
 - The shared header owns signed-out auth actions through Clerk's childless `<SignInButton />` and `<SignUpButton />` components
+- The market data boundary lives at `apps/web/lib/market-data`
+- `apps/web/lib/market-data/types.ts` defines app-owned market data shapes: `HistoryRange`, `MarketSymbol`, `MarketQuote`, and `MarketCandle`
+- `apps/web/lib/market-data/provider.ts` defines the `MarketDataProvider` contract
+- `apps/web/lib/market-data/factory.ts` returns the active provider, currently `TwelveDataProvider`
+- `apps/web/lib/market-data/providers/twelve-data.ts` is scaffolded but still intentionally throws `Not implemented` for `searchSymbols`, `getQuote`, and `getHistory`
 - `npx prisma generate`, `npx tsc -p apps/web/tsconfig.json --noEmit`, and `npm --workspace apps/web run lint` all pass against the current onboarding work
 
 ## This Week's Target Progress
@@ -69,5 +76,8 @@
 
 ## Good Next Steps
 
-- Create a `MarketDataProvider` adapter in the web app
-- Start shaping the first product API routes
+- Add `HistoryRange` to Twelve Data `interval` and `outputsize` mapping
+- Add Twelve Data mapping helpers: raw symbol to `MarketSymbol`, raw quote to `MarketQuote`, and raw candle to `MarketCandle`
+- Implement `getQuote` first, then `searchSymbols`, then `getHistory`
+- Add JSON-level provider error handling for Twelve Data responses where HTTP succeeds but `status` is `error`
+- Run `npm --workspace apps/web run lint`, `npx tsc -p apps/web/tsconfig.json --noEmit`, and `npm --workspace apps/web run build` after the provider methods are implemented
