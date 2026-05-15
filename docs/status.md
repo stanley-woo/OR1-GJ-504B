@@ -42,8 +42,9 @@
 - Step 10 complete: `/`, `/sign-in`, and `/sign-up` now redirect signed-in users into setup, and the shell includes a working sign-out control
 - Step 11 complete: Clerk auth buttons are now used in the supported form for the installed Clerk version: childless `<SignInButton />` and `<SignUpButton />` components, with custom button children avoided
 - Step 12 complete: the Day 1 auth route matrix was manually verified for signed-in and signed-out users across `/`, `/sign-in`, `/sign-up`, `/setup`, and `/dashboard`
-- Step 13 in progress: Day 2 market data provider boundary is scaffolded under `apps/web/lib/market-data`
-- Step 14 in progress: Twelve Data adapter types and low-level helpers are started, including raw response types, URL construction, JSON fetching, and number parsing
+- Step 13 complete: Day 2 market data provider boundary is implemented under `apps/web/lib/market-data`
+- Step 14 complete: Twelve Data adapter now supports symbol search, quotes, and historical candles through normalized app-owned types
+- Step 15 complete: market data provider was manually smoke-tested with `searchSymbols("AAPL")`, `getQuote("AAPL")`, and `getHistory("AAPL", "1M")`
 
 ## Current Files And Runtime Notes
 
@@ -62,7 +63,9 @@
 - `apps/web/lib/market-data/types.ts` defines app-owned market data shapes: `HistoryRange`, `MarketSymbol`, `MarketQuote`, and `MarketCandle`
 - `apps/web/lib/market-data/provider.ts` defines the `MarketDataProvider` contract
 - `apps/web/lib/market-data/factory.ts` returns the active provider, currently `TwelveDataProvider`
-- `apps/web/lib/market-data/providers/twelve-data.ts` is scaffolded but still intentionally throws `Not implemented` for `searchSymbols`, `getQuote`, and `getHistory`
+- `apps/web/lib/market-data/providers/twelve-data.ts` contains the Twelve Data adapter, including raw response types, range mapping, URL construction, JSON fetching, number parsing, and provider-to-app mapping helpers
+- Twelve Data quote/history calls should constrain U.S. listings where needed; `AAPL` quote testing succeeded with `exchange=NASDAQ`
+- Historical candle responses are normalized to oldest-first order for chart/API friendliness
 - `npx prisma generate`, `npx tsc -p apps/web/tsconfig.json --noEmit`, and `npm --workspace apps/web run lint` all pass against the current onboarding work
 
 ## This Week's Target Progress
@@ -74,10 +77,15 @@
 - Day 5: implement `GET /api/portfolio`, `GET /api/orders`, and the first safe version of `POST /api/orders` for immediate paper fills
 - End-of-week demo: signed-in user can search a U.S. stock, inspect a quote/history view, submit a market paper order, and see cash, buying power, orders, and positions update from server-owned state
 
+- Step 16 complete: three read-only market data API routes created under `apps/web/app/api/market/`: `GET /api/market/search?q=`, `GET /api/market/quote/[symbol]`, and `GET /api/market/history/[symbol]?range=`
+- Step 17 complete: search route hardened with USD currency filter, NASDAQ-only exchange filter, derivative product filter (`!symbol.endsWith("XX")`), and symbol deduplication via `Map`
+- Step 18 complete: all three market routes manually curl-tested across happy path and edge cases — invalid range returns 400, invalid symbol returns 500, missing params return safe defaults
+
 ## Good Next Steps
 
-- Add `HistoryRange` to Twelve Data `interval` and `outputsize` mapping
-- Add Twelve Data mapping helpers: raw symbol to `MarketSymbol`, raw quote to `MarketQuote`, and raw candle to `MarketCandle`
-- Implement `getQuote` first, then `searchSymbols`, then `getHistory`
-- Add JSON-level provider error handling for Twelve Data responses where HTTP succeeds but `status` is `error`
-- Run `npm --workspace apps/web run lint`, `npx tsc -p apps/web/tsconfig.json --noEmit`, and `npm --workspace apps/web run build` after the provider methods are implemented
+- Update the Prisma schema to add `Position`, `Transaction`, and `PortfolioSnapshot` models, then run `prisma migrate dev`
+- Install `recharts` (or `lightweight-charts` per original decision) in `apps/web` for charting
+- Begin UI improvements: update the layout nav toward a Robinhood-style header with Portfolio and Search links
+- Build out the Portfolio/Dashboard page with a portfolio value chart, holdings list, and buying power display
+- Build the Search/Discover page
+- Build the Stock Detail + Order Entry page
