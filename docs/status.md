@@ -83,9 +83,9 @@
 
 ## Good Next Steps
 
+- Begin UI improvements: update the layout nav toward a Robinhood-style header with Portfolio and Search links
 - Update the Prisma schema to add `Position`, `Transaction`, and `PortfolioSnapshot` models, then run `prisma migrate dev`
 - Install `recharts` (or `lightweight-charts` per original decision) in `apps/web` for charting
-- Begin UI improvements: update the layout nav toward a Robinhood-style header with Portfolio and Search links
 - Build out the Portfolio/Dashboard page with a portfolio value chart, holdings list, and buying power display
 - Build the Search/Discover page
 - Build the Stock Detail + Order Entry page
