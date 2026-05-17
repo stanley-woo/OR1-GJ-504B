@@ -88,9 +88,8 @@
 ## Good Next Steps
 
 ### Ready Now (no blockers)
-- Install `lightweight-charts` in `apps/web` — standalone npm install, no dependencies
-- Uncomment and wire up the `Account` nav link in `apps/web/app/layout.tsx` — one line change, no dependencies
-- Build the Search/Discover page — only depends on `GET /api/market/search` which is already complete
+- Install `lightweight-charts` in `apps/web`
+- Build the Search/Discover page — only depends on `GET /api/market/search`
 
 ### Requires Schema Migration First
 - Update the Prisma schema to add `Position`, `Transaction`, and `PortfolioSnapshot` models, then run `prisma migrate dev`
