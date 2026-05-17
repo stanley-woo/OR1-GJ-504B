@@ -81,11 +81,18 @@
 - Step 17 complete: search route hardened with USD currency filter, NASDAQ-only exchange filter, derivative product filter (`!symbol.endsWith("XX")`), and symbol deduplication via `Map`
 - Step 18 complete: all three market routes manually curl-tested across happy path and edge cases — invalid range returns 400, invalid symbol returns 500, missing params return safe defaults
 
+- Step 19 complete: global layout nav updated with a signed-in-only search bar (`Search Stocks` input with icon) and a `Portfolio` nav link pointing to `/dashboard`, both wrapped in `<Show when="signed-in">`
+- Step 20 complete: nav spacing corrected using `flex gap-6` on the `<nav>` container and `me-4` margin to separate nav links from user controls
+- Step 21 complete: Tailwind CSS reference sheet created at `docs/tailwind-reference.md` with class descriptions and links to official documentation
+
 ## Good Next Steps
 
-- Begin UI improvements: update the layout nav toward a Robinhood-style header with Portfolio and Search links
+### Ready Now (no blockers)
+- Install `lightweight-charts` in `apps/web` — standalone npm install, no dependencies
+- Uncomment and wire up the `Account` nav link in `apps/web/app/layout.tsx` — one line change, no dependencies
+- Build the Search/Discover page — only depends on `GET /api/market/search` which is already complete
+
+### Requires Schema Migration First
 - Update the Prisma schema to add `Position`, `Transaction`, and `PortfolioSnapshot` models, then run `prisma migrate dev`
-- Install `recharts` (or `lightweight-charts` per original decision) in `apps/web` for charting
-- Build out the Portfolio/Dashboard page with a portfolio value chart, holdings list, and buying power display
-- Build the Search/Discover page
-- Build the Stock Detail + Order Entry page
+- Build the Stock Detail + Order Entry page — needs `Position` and `Transaction` models to place and record trades
+- Build out the Portfolio/Dashboard page — needs `Position` and `PortfolioSnapshot` models, and ideally some real trade data to display
