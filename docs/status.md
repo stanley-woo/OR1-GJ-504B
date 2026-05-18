@@ -84,14 +84,30 @@
 - Step 19 complete: global layout nav updated with a signed-in-only search bar (`Search Stocks` input with icon) and a `Portfolio` nav link pointing to `/dashboard`, both wrapped in `<Show when="signed-in">`
 - Step 20 complete: nav spacing corrected using `flex gap-6` on the `<nav>` container and `me-4` margin to separate nav links from user controls
 - Step 21 complete: Tailwind CSS reference sheet created at `docs/tailwind-reference.md` with class descriptions and links to official documentation
+- Step 22 complete: nav search bar extracted into a reusable `SearchBar` component at `apps/web/app/components/search-bar.tsx` with live search, dropdown results, and `router.push` navigation to `/stocks/[symbol]`
+- Step 23 complete: search dropdown shows popular stocks (`AAPL`, `GOOGL`, `NVDA`, `TSLA`, `AMZN`, `TSMC`) when focused with empty query, and live results when typing
+- Step 24 complete: search filter updated to use a US exchange allowlist (`NASDAQ`, `NYSE`, `NYSE Arca`, `NYSE American`, `CBOE`) replacing the NASDAQ-only filter — `VOO` and other NYSE Arca ETFs now return correctly
+- Step 25 complete: `lightweight-charts` confirmed already installed in `apps/web`
+
+## Current Files And Runtime Notes
+
+- Root Prisma connection lives in `.env`
+- Next.js runtime env vars live in `apps/web/.env.local`
+- Supabase uses the `session pooler` connection string because the direct connection path was not reachable from the current network
+- Prisma is using `prisma.config.ts`, which matches the installed `Prisma 7` setup
+- `prisma/schema.prisma` validates successfully with `npx prisma validate`
+- The onboarding gate lives at `apps/web/app/setup/page.tsx`
+- The shared Prisma client now lives at `apps/web/lib/prisma.ts` and is imported as `@/lib/prisma`
+- The signed-in dashboard lives at `apps/web/app/dashboard/page.tsx`
+- The market data boundary lives at `apps/web/lib/market-data`
+- Search bar component lives at `apps/web/app/components/search-bar.tsx`
+- Search filter uses `US_EXCHANGES` allowlist + `currency === "USD"` + `!symbol.endsWith("XX")` to return clean US stock and ETF results
 
 ## Good Next Steps
 
 ### Ready Now (no blockers)
-- Install `lightweight-charts` in `apps/web`
-- Build the Search/Discover page — only depends on `GET /api/market/search`
+- Update the Prisma schema to add `Position`, `Transaction`, and `PortfolioSnapshot` models, then run `prisma migrate dev`
 
 ### Requires Schema Migration First
-- Update the Prisma schema to add `Position`, `Transaction`, and `PortfolioSnapshot` models, then run `prisma migrate dev`
 - Build the Stock Detail + Order Entry page — needs `Position` and `Transaction` models to place and record trades
 - Build out the Portfolio/Dashboard page — needs `Position` and `PortfolioSnapshot` models, and ideally some real trade data to display
