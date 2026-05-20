@@ -68,7 +68,7 @@
 - Historical candle responses are normalized to oldest-first order for chart/API friendliness
 - `npx prisma generate`, `npx tsc -p apps/web/tsconfig.json --noEmit`, and `npm --workspace apps/web run lint` all pass against the current onboarding work
 
-## This Week's Target Progress
+## Target Progress
 
 - Day 1: stabilize the auth/onboarding loop, keep `/`, `/sign-in`, `/sign-up`, `/setup`, and `/dashboard` working cleanly, and commit the current foundation once verified
 - Day 2: add the market data provider boundary in the web app, starting with a `MarketDataProvider` interface and a Twelve Data-backed adapter for search, quote, and history
@@ -88,6 +88,11 @@
 - Step 23 complete: search dropdown shows popular stocks (`AAPL`, `GOOGL`, `NVDA`, `TSLA`, `AMZN`, `TSMC`) when focused with empty query, and live results when typing
 - Step 24 complete: search filter updated to use a US exchange allowlist (`NASDAQ`, `NYSE`, `NYSE Arca`, `NYSE American`, `CBOE`) replacing the NASDAQ-only filter — `VOO` and other NYSE Arca ETFs now return correctly
 - Step 25 complete: `lightweight-charts` confirmed already installed in `apps/web`
+- Step 26 complete: Prisma schema updated with `Position`, `Transaction`, `PortfolioSnapshot` models and `TransactionType` enum — back-relations added to `BrokerageAccount`
+- Step 27 complete: migration `20260520111820_add_positions_transactions_snapshots` applied successfully to Supabase
+- Step 28 complete: Prisma CLI upgraded to v7.8.0 to match `@prisma/client` — version mismatch resolved
+- Step 29 complete: Prisma Client regenerated successfully with new model types
+- Step 30 complete: Row-Level Security enabled on all Supabase tables
 
 ## Current Files And Runtime Notes
 
@@ -105,9 +110,8 @@
 
 ## Good Next Steps
 
-### Ready Now (no blockers)
-- Update the Prisma schema to add `Position`, `Transaction`, and `PortfolioSnapshot` models, then run `prisma migrate dev`
-
-### Requires Schema Migration First
-- Build the Stock Detail + Order Entry page — needs `Position` and `Transaction` models to place and record trades
-- Build out the Portfolio/Dashboard page — needs `Position` and `PortfolioSnapshot` models, and ideally some real trade data to display
+### Ready Now
+- Build the Trade API (`POST /api/trade`) — buy/sell logic with buying power validation and atomic DB updates
+- Build the Portfolio API (`GET /api/portfolio`) — fetch positions with live quotes, compute total portfolio value
+- Build the Stock Detail + Order Entry page (`/stocks/[symbol]`)
+- Build out the Portfolio/Dashboard page (redesign of `/dashboard`)
