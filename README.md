@@ -11,7 +11,7 @@ Starter workspace for a paper-trading application.
 - Clerk env vars are configured for the web app
 - Twelve Data env vars are configured and the quote API was tested successfully
 
-## Core Decisions
+## Application's Architecture
 
 - Frontend and primary backend: `Next.js + TypeScript`
 - Database: `Postgres` hosted on `Supabase`
@@ -33,7 +33,7 @@ Starter workspace for a paper-trading application.
 - `infra`: deployment and local infrastructure notes
 - `docs`: product, architecture, setup, and decision records
 
-## Next Documents To Read
+## Documents You Can Read To Understand the Scope of the Project More
 
 - [MVP](./docs/mvp.md)
 - [Architecture](./docs/architecture.md)
